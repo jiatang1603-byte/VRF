@@ -1,0 +1,6 @@
+{
+  "name": "訪客調查登記表",
+  "description": "以海洋配色調性為主的訪客調查登記表，搭配互動式海洋小生物（小魚、小花枝、小蝦）以及漂浮氣泡效果，畫面簡潔且完美適應各類行動裝置。",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
