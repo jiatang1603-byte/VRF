@@ -430,7 +430,254 @@ export function LittleShrimp({ onSpawnBubble }: Omit<CreatureProps, "containerWi
   );
 }
 
-// 4. Floating Creature Wrapper (Renders floats around in custom random bounding boxes)
+// 4. Little Starfish (小海星) - Responsive star vector that spins and smiles!
+export function LittleStarfish({ onSpawnBubble }: Omit<CreatureProps, "containerWidth" | "containerHeight">) {
+  const [isWobbling, setIsWobbling] = useState(false);
+  const controls = useAnimationControls();
+
+  const handleInteraction = () => {
+    if (isWobbling) return;
+    setIsWobbling(true);
+    onSpawnBubble(50, 50, 5);
+
+    controls.start({
+      rotate: [0, -30, 390, 360],
+      scale: [1, 1.2, 0.9, 1],
+      transition: { duration: 1.2, ease: "easeInOut" }
+    }).then(() => {
+      setIsWobbling(false);
+      // Reset rotation back to standard coordinate safely
+      controls.set({ rotate: 0 });
+    });
+  };
+
+  return (
+    <motion.div
+      className="relative cursor-pointer select-none"
+      onClick={handleInteraction}
+      onMouseEnter={handleInteraction}
+      animate={controls}
+      style={{ width: "70px", height: "70px" }}
+    >
+      <svg
+        viewBox="0 0 100 100"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-full h-full drop-shadow-[0_4px_10px_rgba(234,179,8,0.4)]"
+      >
+        {/* Starfish shape */}
+        <path
+          d="M 50 10 
+             C 53 28, 62 38, 80 40 
+             C 62 42, 60 55, 68 85 
+             C 53 72, 47 72, 32 85 
+             C 40 55, 38 42, 20 40 
+             C 38 38, 47 28, 50 10 Z"
+          fill="url(#starGradient)"
+          stroke="#eab308"
+          strokeWidth="2.5"
+          strokeLinejoin="round"
+        />
+
+        {/* Small soft skin spots */}
+        <circle cx="50" cy="25" r="2.5" fill="#ca8a04" opacity="0.6" />
+        <circle cx="68" cy="45" r="2" fill="#ca8a04" opacity="0.6" />
+        <circle cx="60" cy="65" r="2.5" fill="#ca8a04" opacity="0.6" />
+        <circle cx="40" cy="65" r="2" fill="#ca8a04" opacity="0.6" />
+        <circle cx="32" cy="45" r="2.5" fill="#ca8a04" opacity="0.6" />
+
+        {/* Happy sparkling eyes */}
+        <circle cx="43" cy="44" r="5" fill="white" />
+        <circle cx="43" cy="44" r="3" fill="#854d0e" />
+        <circle cx="44.5" cy="42.5" r="1" fill="white" />
+
+        <circle cx="57" cy="44" r="5" fill="white" />
+        <circle cx="57" cy="44" r="3" fill="#854d0e" />
+        <circle cx="58.5" cy="42.5" r="1" fill="white" />
+
+        {/* Rosy cheeks */}
+        <circle cx="37" cy="49" r="3" fill="#f43f5e" opacity="0.5" />
+        <circle cx="63" cy="49" r="3" fill="#f43f5e" opacity="0.5" />
+
+        {/* Big cute mouth */}
+        <path
+          d="M 46 51 Q 50 56 54 51"
+          stroke="#451a03"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          fill="none"
+        />
+
+        <defs>
+          <linearGradient id="starGradient" x1="20" y1="20" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="#fef08a" />
+            <stop offset="50%" stopColor="#facc15" />
+            <stop offset="100%" stopColor="#f59e0b" />
+          </linearGradient>
+        </defs>
+      </svg>
+    </motion.div>
+  );
+}
+
+// 5. Little Crab (小螃蟹) - Walks sideways, opens/closes claws, very playful!
+export function LittleCrab({ onSpawnBubble }: Omit<CreatureProps, "containerWidth" | "containerHeight">) {
+  const [isPinching, setIsPinching] = useState(false);
+  const controls = useAnimationControls();
+
+  const handleInteraction = () => {
+    if (isPinching) return;
+    setIsPinching(true);
+    onSpawnBubble(50, 30, 4);
+
+    // Sideways quick crawl dance and snap
+    controls.start({
+      x: [0, -30, 30, -15, 0],
+      rotate: [0, -5, 5, -3, 0],
+      transition: { duration: 1.0, ease: "easeInOut" }
+    }).then(() => setIsPinching(false));
+  };
+
+  return (
+    <motion.div
+      className="relative cursor-pointer select-none"
+      onClick={handleInteraction}
+      onMouseEnter={handleInteraction}
+      animate={controls}
+      style={{ width: "80px", height: "65px" }}
+    >
+      <svg
+        viewBox="0 0 100 80"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-full h-full drop-shadow-[0_4px_10px_rgba(239,68,68,0.4)]"
+      >
+        {/* Little Legs at the bottom left/right */}
+        <g stroke="#dc2626" strokeWidth="3" strokeLinecap="round">
+          {/* Left legs */}
+          <motion.path
+            d="M 25 45 Q 12 50 10 60"
+            animate={isPinching ? { d: ["M 25 45 Q 12 45 10 52", "M 25 45 Q 12 55 10 65", "M 25 45 Q 12 50 10 60"] } : {}}
+            transition={{ duration: 0.3, repeat: isPinching ? 3 : 0 }}
+          />
+          <motion.path
+            d="M 30 47 Q 18 55 15 68"
+            animate={isPinching ? { d: ["M 30 47 Q 18 50 15 60", "M 30 47 Q 18 60 15 72", "M 30 47 Q 18 55 15 68"] } : {}}
+            transition={{ duration: 0.3, delay: 0.05, repeat: isPinching ? 3 : 0 }}
+          />
+          <motion.path
+            d="M 35 48 M 35 48 Q 24 60 22 72"
+            animate={isPinching ? { d: ["M 35 48 Q 24 55 22 65", "M 35 48 Q 24 65 22 76", "M 35 48 Q 24 60 22 72"] } : {}}
+            transition={{ duration: 0.3, delay: 0.1, repeat: isPinching ? 3 : 0 }}
+          />
+
+          {/* Right legs */}
+          <motion.path
+            d="M 75 45 Q 88 50 90 60"
+            animate={isPinching ? { d: ["M 75 45 Q 88 45 90 52", "M 75 45 Q 88 55 90 65", "M 75 45 Q 88 50 90 60"] } : {}}
+            transition={{ duration: 0.3, repeat: isPinching ? 3 : 0 }}
+          />
+          <motion.path
+            d="M 70 47 Q 82 55 85 68"
+            animate={isPinching ? { d: ["M 70 47 Q 82 50 85 60", "M 70 47 Q 82 60 85 72", "M 70 47 Q 82 55 85 68"] } : {}}
+            transition={{ duration: 0.3, delay: 0.05, repeat: isPinching ? 3 : 0 }}
+          />
+          <motion.path
+            d="M 65 48 M 65 48 Q 76 60 78 72"
+            animate={isPinching ? { d: ["M 65 48 Q 76 55 78 65", "M 65 48 Q 76 65 78 76", "M 65 48 Q 76 60 78 72"] } : {}}
+            transition={{ duration: 0.3, delay: 0.1, repeat: isPinching ? 3 : 0 }}
+          />
+        </g>
+
+        {/* Left Arm / Pincher Claw */}
+        <g id="left-claw">
+          <path d="M30 40 Q 15 32 18 20" stroke="#ef4444" strokeWidth="4.5" strokeLinecap="round" />
+          <motion.path
+            d="M 18 20 C 13 14, 8 22, 14 26 Z"
+            fill="url(#crabRedGradient)"
+            stroke="#991b1b"
+            strokeWidth="1.5"
+            animate={isPinching ? { rotate: [0, -15, 10, 0] } : {}}
+            transition={{ duration: 0.4, repeat: isPinching ? 2 : 0 }}
+            style={{ originX: "18px", originY: "20px" }}
+          />
+          <motion.path
+            d="M 18 20 C 18 10, 26 15, 22 23"
+            stroke="#ef4444"
+            strokeWidth="3.5"
+            strokeLinecap="round"
+            animate={isPinching ? { rotate: [0, 15, -10, 0] } : {}}
+            transition={{ duration: 0.4, repeat: isPinching ? 2 : 0 }}
+            style={{ originX: "18px", originY: "20px" }}
+          />
+        </g>
+
+        {/* Right Arm / Pincher Claw */}
+        <g id="right-claw">
+          <path d="M70 40 Q 85 32 82 20" stroke="#ef4444" strokeWidth="4.5" strokeLinecap="round" />
+          <motion.path
+            d="M 82 20 C 87 14, 92 22, 86 26 Z"
+            fill="url(#crabRedGradient)"
+            stroke="#991b1b"
+            strokeWidth="1.5"
+            animate={isPinching ? { rotate: [0, 15, -10, 0] } : {}}
+            transition={{ duration: 0.4, repeat: isPinching ? 2 : 0 }}
+            style={{ originX: "82px", originY: "20px" }}
+          />
+          <motion.path
+            d="M 82 20 C 82 10, 74 15, 78 23"
+            stroke="#ef4444"
+            strokeWidth="3.5"
+            strokeLinecap="round"
+            animate={isPinching ? { rotate: [0, -15, 10, 0] } : {}}
+            transition={{ duration: 0.4, repeat: isPinching ? 2 : 0 }}
+            style={{ originX: "82px", originY: "20px" }}
+          />
+        </g>
+
+        {/* Main round plump crab body */}
+        <ellipse cx="50" cy="46" rx="24" ry="17" fill="url(#crabRedGradient)" stroke="#b91c1c" strokeWidth="2.5" />
+
+        {/* Cute Eyestalks extending upwards */}
+        <g stroke="#b91c1c" strokeWidth="3">
+          <path d="M 40 32 L 38 20" />
+          <path d="M 60 32 L 62 20" />
+        </g>
+        {/* Eyeballs */}
+        <circle cx="38" cy="18" r="5" fill="white" stroke="#7f1d1d" strokeWidth="1" />
+        <circle cx="38.5" cy="18" r="2.5" fill="#0f172a" />
+        <circle cx="37.5" cy="17" r="1" fill="white" />
+
+        <circle cx="62" cy="18" r="5" fill="white" stroke="#7f1d1d" strokeWidth="1" />
+        <circle cx="62.5" cy="18" r="2.5" fill="#0f172a" />
+        <circle cx="61.5" cy="17" r="1" fill="white" />
+
+        {/* Happy red cheeks */}
+        <circle cx="35" cy="44" r="3" fill="#fca5a5" opacity="0.6" />
+        <circle cx="65" cy="44" r="3" fill="#fca5a5" opacity="0.6" />
+
+        {/* Smiling Mouth */}
+        <path
+          d="M 46 48 Q 50 53 54 48"
+          stroke="#7f1d1d"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          fill="none"
+        />
+
+        <defs>
+          <linearGradient id="crabRedGradient" x1="26" y1="46" x2="74" y2="46" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="#f87171" />
+            <stop offset="50%" stopColor="#ef4444" />
+            <stop offset="100%" stopColor="#b91c1c" />
+          </linearGradient>
+        </defs>
+      </svg>
+    </motion.div>
+  );
+}
+
+// 6. Floating Creature Wrapper (Renders floats around in custom random bounding boxes)
 export function FloatingCreature({
   children,
   startX,
